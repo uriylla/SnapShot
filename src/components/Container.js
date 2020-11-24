@@ -9,10 +9,9 @@ const Container = ({ searchTerm }) => {
     images[searchTerm] || runSearch(searchTerm);
     // eslint-disable-next-line
   }, [searchTerm]);
-
   return (
     <div className="photo-container">
-      {(loading || !images[searchTerm]) ? <Loader /> : <Gallery data={images[searchTerm]} />}
+      {(loading || !images[searchTerm]) ? <Loader /> : <Gallery data={images[searchTerm]} />}
     </div>
   );
 };
