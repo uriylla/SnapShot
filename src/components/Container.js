@@ -6,13 +6,13 @@ import Loader from "./Loader";
 const Container = ({ searchTerm }) => {
   const { images, loading, runSearch } = useContext(PhotoContext);
   useEffect(() => {
-    runSearch(searchTerm);
+    images[searchTerm] || runSearch(searchTerm);
     // eslint-disable-next-line
   }, [searchTerm]);
 
   return (
     <div className="photo-container">
-      {loading ? <Loader /> : <Gallery data={images} />}
+      {(loading || !images[searchTerm]) ? <Loader /> : <Gallery data={images[searchTerm]} />}
     </div>
   );
 };
