@@ -15,8 +15,15 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 class Map extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      markers: [],
+    };
+  }
+
   componentDidMount() {
-    this.mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    this.map = L.map('mapid').setView([51.505, -0.09], 13);
     window.L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`, {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       maxZoom: 18,
@@ -24,15 +31,17 @@ class Map extends React.Component {
       tileSize: 512,
       zoomOffset: -1,
       accessToken: mapboxAccessToken
-    }).addTo(this.mymap);
+    }).addTo(this.map);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.images !== prevProps.images) {
-      this.props.images.map(img => {
+      this.state.markers.map(marker => this.map.removeLayer(marker))
+      const newMarkers = this.props.images.map(img => {
         console.log(img.location)
-        L.marker([parseFloat(img.location.latitude), parseFloat(img.location.longitude)]).addTo(this.mymap)
+        return L.marker([parseFloat(img.location.latitude), parseFloat(img.location.longitude)]).addTo(this.map);
       });
+      this.setState(() => ({markers: newMarkers}))
     }
   }
 
