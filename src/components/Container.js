@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { PhotoContext } from "../context/PhotoContext";
 import Gallery from "./Gallery";
 import Loader from "./Loader";
+import Map from "./Map";
 
 const Container = ({ searchTerm }) => {
   const { images, loading, runSearch } = useContext(PhotoContext);
@@ -11,6 +12,7 @@ const Container = ({ searchTerm }) => {
   }, [searchTerm]);
   return (
     <div className="photo-container">
+      <Map />
       {(loading || !images[searchTerm]) ? <Loader /> : <Gallery data={images[searchTerm]} />}
     </div>
   );

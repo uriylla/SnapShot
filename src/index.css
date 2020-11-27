@@ -121,6 +121,10 @@ input {
   background-color: #051c33;
 }
 
+.map {
+  height: 300px;
+}
+
 .photo-container ul {
   display: flex;
   flex-flow: row wrap;
