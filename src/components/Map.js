@@ -8,7 +8,10 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
-    shadowUrl: iconShadow
+    shadowUrl: iconShadow,
+    iconAnchor:   [13, 41],
+    shadowAnchor: [12, 41],
+    // popupAnchor:  [-3, -76]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -20,7 +23,7 @@ const Map = ({ images }) => {
 
   useEffect(() => {
     const mapInstance = L.map('mapid').setView([51.505, -0.09], 13);
-    const markerGroup = L.layerGroup().addTo(mapInstance);
+    const markerGroup = L.featureGroup().addTo(mapInstance);
     setMarkers(markerGroup);
     setMap(mapInstance);
 
@@ -41,6 +44,8 @@ const Map = ({ images }) => {
         .marker([parseFloat(img.location.latitude), parseFloat(img.location.longitude)])
         .addTo(markers)
       );
+      const bounds = markers.getBounds();
+      bounds.isValid() && map.fitBounds(bounds);
     }
   }, [images, map, markers]);
 
