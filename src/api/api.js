@@ -12,14 +12,10 @@ const getLocationByImageId = id => axios
     `https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=${apiKey}&photo_id=${id}&format=json&nojsoncallback=1`
   )
 
-const searchGeoLocatedImages = query => {
-  let imgs;
-  return searchImages(query)
-    .then(({ data: { photos: { photo } }}) => {
-      imgs = photo;
-      return Promise.all(imgs.map(({ id }) => getLocationByImageId(id)));
-    })
-    .then(locations => utils.addLocationToImages(imgs, locations));
+const searchGeoLocatedImages = async query => {
+  const { data: { photos: { photo } } } = await searchImages(query);
+  const locations = await Promise.all(photo.map(({ id }) => getLocationByImageId(id)));
+  return utils.addLocationToImages(photo, locations);
 };
 
 export default {

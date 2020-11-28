@@ -10,7 +10,6 @@ const Container = ({ searchTerm }) => {
     images[searchTerm] || runSearch(searchTerm);
     // eslint-disable-next-line
   }, [searchTerm]);
-  console.log({images})
   return (
     <div className="photo-container">
       <Map images={images[searchTerm] || []}/>

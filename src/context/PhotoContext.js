@@ -8,9 +8,7 @@ const PhotoContextProvider = props => {
   
   const runSearch = (query) => {
     setLoading(true);
-    let imgs = [];
-    api
-      .searchGeoLocatedImages(query)
+    api.searchGeoLocatedImages(query)
       .then((imgs) => {
         setImages({ ...images, [query]: imgs });
         setLoading(false);
