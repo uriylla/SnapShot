@@ -121,6 +121,15 @@ input {
   background-color: #051c33;
 }
 
+.map-container {
+  position: 'sticky';
+  top: '0';
+  padding-top: '15px';
+  padding-bottom: '15px';
+  z-index: '2';
+  background-color: white;
+}
+
 .map {
   height: 300px;
 }
@@ -138,6 +147,10 @@ input {
   height: 165px;
   overflow: hidden;
   margin-bottom: 15px;
+}
+
+.gallery-image--selected {
+  border: 2px solid blue;
 }
 
 .photo-container ul img {

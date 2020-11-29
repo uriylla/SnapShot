@@ -6,24 +6,32 @@ import { mapboxAccessToken } from '../api/config';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-let DefaultIcon = L.icon({
+const DefaultIcon = L.icon({
     iconUrl: icon,
     shadowUrl: iconShadow,
     iconAnchor:   [13, 41],
-    shadowAnchor: [12, 41],
-    // popupAnchor:  [-3, -76]
+    shadowAnchor: [12, 41]
+});
+
+const SelectedIcon = L.icon({
+  iconUrl: '/marker-icon-selected.png',
+  shadowUrl: iconShadow,
+  iconAnchor:   [13, 41],
+  shadowAnchor: [12, 41]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const Map = ({ images }) => {
+const Map = ({ images, handleMarkerClick, selectedImageId }) => {
   
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState(null);
 
   useEffect(() => {
-    const mapInstance = L.map('mapid').setView([51.505, -0.09], 13);
-    const markerGroup = L.featureGroup().addTo(mapInstance);
+    const mapInstance = L.map('mapid');
+    const markerGroup = L
+      .featureGroup()
+      .addTo(mapInstance);
     setMarkers(markerGroup);
     setMap(mapInstance);
 
@@ -40,17 +48,29 @@ const Map = ({ images }) => {
   useEffect(() => {
     if (map) {
       markers.clearLayers();
-      images.map(img => L
-        .marker([parseFloat(img.location.latitude), parseFloat(img.location.longitude)])
-        .addTo(markers)
-      );
-      const bounds = markers.getBounds();
-      bounds.isValid() && map.fitBounds(bounds);
+      images.map(({ location: { latitude, longitude }, ...rest}) => {
+        const isSelected = selectedImageId === rest.id;
+        let options = {};
+        if (isSelected) {
+          options = { icon: SelectedIcon, zIndexOffset: 1000 }
+          map.panTo([parseFloat(latitude), parseFloat(longitude)]);
+        }
+        return L.marker([parseFloat(latitude), parseFloat(longitude)], options)
+          .on('click', () => handleMarkerClick(rest.id))
+          .addTo(markers)
+      });
+      if (!selectedImageId) {
+        const bounds = markers.getBounds();
+        bounds.isValid() && map.fitBounds(bounds);
+      }
     }
-  }, [images, map, markers]);
+  }, [images, map, markers, handleMarkerClick, selectedImageId]);
+
 
   return (
-    <div id="mapid" className="map"/>
+    <div className="map-container">
+      <div id="mapid" className="map" />
+    </div>
   );
 }
 

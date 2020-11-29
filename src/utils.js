@@ -13,6 +13,11 @@ const addLocationToImages = (imgs, locations) =>
     []
   );
 
+const getFlickrImgURL = ({farm, server, id, secret}) => {
+  return `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}_m.jpg`;
+}
+
 export default {
   addLocationToImages,
+  getFlickrImgURL,
 };
